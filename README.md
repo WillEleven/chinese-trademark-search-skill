@@ -1,8 +1,18 @@
-# 中国商标查询 Skill
+# Chinese Trademark Search Skill / 中国商标查询 Skill
 
-这是一个面向 OpenClaw / ClawHub 的公开 Skill，用于连接“自有商标 SaaS 平台 API”，帮助用户完成中国商标查询、翻页、详情查看、导出、点数检查、模块查看与绑定引导。
+A public Skill for OpenClaw / ClawHub that connects to a proprietary trademark SaaS platform API, enabling users to search Chinese trademarks, browse results, view details, export data, check point balances, view modules, and get onboarding guidance. Deployed globally with regional endpoints for mainland China and international users.
+
+---
+
+这是一个面向 OpenClaw / ClawHub 的公开 Skill，用于连接”自有商标 SaaS 平台 API”，帮助用户完成中国商标查询、翻页、详情查看、导出、点数检查、模块查看与绑定引导。
 
 本 Skill 不直连上游商标数据商接口，也不要求用户提供上游账号密码。用户只需要配置自己在平台中的用户级 token。
+
+---
+
+> **Legal Disclaimer:** Trademark search results are for informational purposes only and do not constitute legal advice. Data may be delayed 1-7 days behind CNIPA. See [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md) for full details.
+>
+> **法律声明：** 商标查询结果仅供参考，不构成法律建议。数据可能滞后 CNIPA 1-7 天。详情请参阅 [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md)。
 
 ## 适用场景
 
@@ -159,3 +169,43 @@ CLI 统一输出 JSON 到标准输出，便于 OpenClaw 解析。
   }
 }
 ```
+
+---
+
+## Legal and Compliance / 法律与合规
+
+### Data Privacy / 数据隐私
+
+This Skill is deployed globally and is subject to multiple data protection regimes. Please review the applicable notices:
+
+- **GDPR (EU/EEA users):** [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md) - Legal basis, data subject rights, cross-border transfer mechanisms (SCCs)
+- **CCPA (California residents):** [CCPA_NOTICE.md](CCPA_NOTICE.md) - We do not sell personal information. Right to know, delete, and opt-out.
+
+### Data Residency / 数据驻留
+
+The platform operates two isolated regional deployments:
+
+| Region | Domain | Data Location | Applicable Law |
+|---|---|---|---|
+| China Mainland | `zqip.cn` | Mainland China | PIPL |
+| Global | `zqaiip.com` | Hong Kong SAR | PDPO |
+
+Databases are **not shared** between regions. EU users are recommended to use the HK region. See [DATA_RESIDENCY.md](DATA_RESIDENCY.md).
+
+### Export Control Warning / 出口管制警告
+
+This service is subject to US EAR and OFAC sanctions regulations. Use is prohibited from Iran, North Korea, Syria, Cuba, Crimea, and by SDN-listed parties. See [SANCTIONS_COMPLIANCE.md](SANCTIONS_COMPLIANCE.md).
+
+### All Legal Documents / 所有法律文件
+
+| Document | Description |
+|---|---|
+| [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md) | Legal disclaimer - informational use only / 法律声明 |
+| [SANCTIONS_COMPLIANCE.md](SANCTIONS_COMPLIANCE.md) | Export control and sanctions compliance / 出口管制与制裁合规 |
+| [DATA_RESIDENCY.md](DATA_RESIDENCY.md) | Data residency and regional architecture / 数据驻留 |
+| [API_TERMS_OF_USE.md](API_TERMS_OF_USE.md) | API terms of use, rate limits, SLA / API 使用条款 |
+| [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md) | GDPR compliance notice / GDPR 合规声明 |
+| [CCPA_NOTICE.md](CCPA_NOTICE.md) | California Consumer Privacy Act notice / CCPA 通知 |
+| [TIMEZONE.md](TIMEZONE.md) | Timezone and date conventions / 时区与日期参考 |
+| [PRICING.md](PRICING.md) | Points pricing and refund policy / 定价说明 |
+| [SECURITY.md](SECURITY.md) | Security notice / 安全说明 |
