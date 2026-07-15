@@ -24,6 +24,35 @@ Authorization: Bearer {CHINA_TM_USER_TOKEN}
 Content-Type: application/json
 ```
 
+### 幂等请求头（计费可靠性）
+
+客户端可在请求头传 `X-OC-Request-Id`（8-64 位，字符集 `[A-Za-z0-9_-]`）作为幂等键；网络重试时复用同一 ID 不会重复扣点。CLI 已自动处理。
+
+```http
+X-OC-Request-Id: req_a1B2c3D4e5F6
+```
+
+### 失败自动退点
+
+- 查询失败（上游异常）自动退点，返回 500 `SERVER_ERROR` 且 body 含 `refundedPoints`
+- 详情上游失败自动退点，返回 502 `UPSTREAM_ERROR`
+- 导出任务创建失败自动退点
+
+### 点数不足（HTTP 402）
+
+点数不足时返回 HTTP 402，body：
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "POINTS_NOT_ENOUGH",
+    "message": "点数不足，请先充值",
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
+  }
+}
+```
+
 ---
 
 ## 1. GET /v1/openclaw/capabilities
@@ -55,14 +84,17 @@ Authorization: Bearer tmu_demo_user_token
   },
   "metering": {
     "search": { "estimatedPoints": 1, "label": "查询预计消耗 1 点" },
-    "page": { "estimatedPoints": 1, "label": "翻页预计消耗 1 点" },
-    "detail": { "estimatedPoints": 1, "label": "详情预计消耗 1 点" },
+    "detail": { "estimatedPoints": 2, "label": "详情预计消耗 2 点" },
     "exportTiers": [
       { "min": 1, "max": 10, "points": 1 },
       { "min": 11, "max": 50, "points": 3 },
       { "min": 51, "max": 100, "points": 5 },
-      { "min": 101, "max": 500, "points": 10 }
+      { "min": 101, "max": null, "points": 10 }
     ]
+  },
+  "billing": {
+    "pointsPerYuan": 5,
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
   },
   "featureEntitlements": [
     { "code": "renew_monitor", "name": "续展监控", "enabled": true },
@@ -76,7 +108,9 @@ Authorization: Bearer tmu_demo_user_token
 
 ## 2. POST /v1/openclaw/trademarks/search
 
-执行商标查询。
+执行商标查询。每次查询扣 1 点，固定返回第一页前 50 条结果。
+
+**翻页暂不支持**：`page` 大于 1 会返回 `PAGINATION_NOT_SUPPORTED` 错误且不扣点。
 
 ### 请求示例
 
@@ -143,14 +177,40 @@ Authorization: Bearer tmu_demo_user_token
 }
 ```
 
-### 点数不足示例
+### 点数不足示例（HTTP 402）
 
 ```json
 {
   "success": false,
   "error": {
     "code": "POINTS_NOT_ENOUGH",
-    "message": "点数不足，请先充值后再查询"
+    "message": "点数不足，请先充值",
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
+  }
+}
+```
+
+### 翻页不支持示例（不扣点）
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "PAGINATION_NOT_SUPPORTED",
+    "message": "暂不支持翻页，每次查询固定返回第一页前 50 条结果"
+  }
+}
+```
+
+### 查询失败自动退点示例（HTTP 500）
+
+```json
+{
+  "success": false,
+  "refundedPoints": 1,
+  "error": {
+    "code": "SERVER_ERROR",
+    "message": "上游查询异常，已自动退回本次扣点"
   }
 }
 ```
@@ -171,7 +231,7 @@ Authorization: Bearer tmu_demo_user_token
 
 ## 3. GET /v1/openclaw/trademarks/{tmid}
 
-读取指定商标详情。
+读取指定商标详情。每条商标详情扣 2 点（因需调用上游两次）；**同一商标已购详情后再次查看不重复扣点**。上游失败自动退点，返回 502 `UPSTREAM_ERROR`。
 
 ### 请求示例
 
@@ -185,8 +245,9 @@ Authorization: Bearer tmu_demo_user_token
 ```json
 {
   "success": true,
-  "estimatedPoints": 1,
-  "chargedPoints": 1,
+  "estimatedPoints": 2,
+  "chargedPoints": 2,
+  "alreadyPurchased": false,
   "remainingPoints": 84,
   "trademark": {
     "tmid": "tm_20260310_0001",
@@ -220,7 +281,7 @@ Authorization: Bearer tmu_demo_user_token
 
 ## 4. POST /v1/openclaw/trademarks/export
 
-创建导出任务。
+创建导出任务。导出任务创建失败自动退点。
 
 ### 请求示例
 
@@ -284,7 +345,7 @@ Authorization: Bearer tmu_demo_user_token
   "exportJobId": "exp_20260310_0003",
   "status": "completed",
   "fileName": "重庆华源科技有限公司_商标导出_2026-03-10.csv",
-  "downloadUrl": "https://tm.example.cn/downloads/exp_20260310_0003.csv",
+  "downloadUrl": "https://tm.zhengquai.com/downloads/exp_20260310_0003.csv",
   "createdAt": "2026-03-10T09:18:00+08:00",
   "completedAt": "2026-03-10T09:18:12+08:00"
 }
@@ -382,22 +443,18 @@ Authorization: Bearer tmu_demo_user_token
 {
   "success": true,
   "bound": false,
-  "bindUrl": "https://openclaw.zqip.cn",
-  "bindUrls": {
-    "china": "https://openclaw.zqip.cn",
-    "global": "https://openclaw.zqaiip.com"
-  },
-  "recommendedRegion": "china",
+  "bindUrl": "https://tm.zhengquai.com",
+  "registerUrl": "https://tm.zhengquai.com/register",
+  "apiKeysUrl": "https://tm.zhengquai.com/settings/api-keys",
+  "rechargeUrl": "https://tm.zhengquai.com/billing",
   "steps": [
-    "按所在区域访问对应 OpenClaw 域名并注册账号",
-    "中国区域使用 openclaw.zqip.cn，国外区域使用 openclaw.zqaiip.com",
-    "平台可按 IP 或区域策略自动推荐更合适的域名入口",
-    "进入 OpenClaw 绑定页面",
-    "确认当前账号所属组织",
-    "生成或粘贴用户级 token",
-    "完成绑定后返回 OpenClaw 重试"
+    "访问 https://tm.zhengquai.com/register 注册账号并创建组织",
+    "登录后进入设置页生成 API Key（tmu_ 前缀，仅显示一次）",
+    "将 API Key 配置为环境变量 CHINA_TM_USER_TOKEN",
+    "将 CHINA_TM_PLATFORM_BASE_URL 配置为 https://tm.zhengquai.com",
+    "重试 capabilities 验证绑定状态"
   ],
-  "trialNotice": "首次绑定后，符合条件的新组织可能获得 50 点体验点"
+  "trialNotice": "新注册组织赠送 10 点体验点（30 天有效）；点数用完可在充值页充值，¥1 = 5 点"
 }
 ```
 
@@ -409,10 +466,12 @@ Authorization: Bearer tmu_demo_user_token
 |---|---|
 | `ENV_MISSING` | 环境变量缺失 |
 | `BIND_REQUIRED` | 尚未绑定平台 |
-| `POINTS_NOT_ENOUGH` | 点数不足 |
+| `POINTS_NOT_ENOUGH` | 点数不足（HTTP 402，body 含 `rechargeUrl`） |
+| `PAGINATION_NOT_SUPPORTED` | 暂不支持翻页（`page` > 1，不扣点） |
 | `FEATURE_NOT_ENABLED` | 模块未开通 |
 | `UNAUTHORIZED` | token 无效或已过期 |
 | `FORBIDDEN` | 当前用户无权访问该资源 |
 | `RATE_LIMITED` | 请求过于频繁 |
 | `UPSTREAM_TIMEOUT` | 平台接口超时 |
-| `SERVER_ERROR` | 平台内部错误 |
+| `UPSTREAM_ERROR` | 上游异常（HTTP 502，详情已扣点自动退回） |
+| `SERVER_ERROR` | 平台内部错误（查询失败自动退点，body 含 `refundedPoints`） |

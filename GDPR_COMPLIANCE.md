@@ -11,9 +11,9 @@ This notice describes how the Chinese Trademark Search platform processes person
 
 ### 1. Data Controller
 
-The data controller for personal data processed through the Global region (`zqaiip.com`) is the platform operator. For inquiries, contact:
+The data controller for personal data processed through the platform (`tm.zhengquai.com`) is the platform operator. For inquiries, contact:
 
-**Data Protection Officer:** dpo@zqaiip.com
+**Data Protection Officer:** lengqifeng11@gmail.com
 
 ### 2. Legal Basis for Processing
 
@@ -65,13 +65,13 @@ Under the GDPR, data subjects have the following rights:
 | **Objection** (Art. 21) | Object to processing based on legitimate interests |
 | **Restriction** (Art. 18) | Request restriction of processing under certain conditions |
 
-To exercise any of these rights, contact: **privacy@zqaiip.com**
+To exercise any of these rights, contact: **lengqifeng11@gmail.com**
 
 Requests will be responded to within 30 days. The platform may request identity verification before processing requests.
 
 ### 6. Cross-Border Data Transfers
 
-Personal data of EEA users processed through the Global region is stored in **Hong Kong SAR**. As the European Commission has not issued an adequacy decision for Hong Kong, the platform relies on the following transfer mechanism:
+The platform currently operates a single-region deployment; personal data of EEA users is stored in **mainland China** (an overseas region is planned but not yet available). As the European Commission has not issued an adequacy decision for mainland China, the platform relies on the following transfer mechanism:
 
 - **Standard Contractual Clauses (SCCs)** as adopted by the European Commission (Commission Implementing Decision (EU) 2021/914), supplemented by a Transfer Impact Assessment (TIA).
 
@@ -83,7 +83,7 @@ Key safeguards include:
 
 ### 7. Data Processing Agreement (DPA)
 
-A Data Processing Agreement compliant with GDPR Art. 28 is available upon request for enterprise and B2B customers. To request a DPA, contact: **legal@zqaiip.com**
+A Data Processing Agreement compliant with GDPR Art. 28 is available upon request for enterprise and B2B customers. To request a DPA, contact: **lengqifeng11@gmail.com**
 
 ### 8. Sub-Processors
 
@@ -107,9 +107,9 @@ Data subjects have the right to lodge a complaint with a supervisory authority i
 
 ### 1. 数据控制者
 
-通过全球区域（`zqaiip.com`）处理的个人数据的数据控制者为平台运营方。如有疑问，请联系：
+通过本平台（`tm.zhengquai.com`）处理的个人数据的数据控制者为平台运营方。如有疑问，请联系：
 
-**数据保护官（DPO）：** dpo@zqaiip.com
+**数据保护官（DPO）：** lengqifeng11@gmail.com
 
 ### 2. 处理的法律依据
 
@@ -161,13 +161,13 @@ Data subjects have the right to lodge a complaint with a supervisory authority i
 | **反对权**（第 21 条） | 反对基于合法利益的处理 |
 | **限制处理权**（第 18 条） | 在特定条件下请求限制处理 |
 
-如需行使上述任何权利，请联系：**privacy@zqaiip.com**
+如需行使上述任何权利，请联系：**lengqifeng11@gmail.com**
 
 请求将在 30 天内回复。平台可能在处理请求前要求身份验证。
 
 ### 6. 跨境数据传输
 
-EEA 用户通过全球区域处理的个人数据存储在**中国香港特别行政区**。由于欧盟委员会尚未对香港作出充分性认定，平台依赖以下传输机制：
+平台当前为单区域部署，EEA 用户的个人数据存储在**中国大陆**（海外节点在规划中，尚未上线）。由于欧盟委员会尚未对中国大陆作出充分性认定，平台依赖以下传输机制：
 
 - 欧盟委员会通过的**标准合同条款（SCCs）**（委员会实施决定 (EU) 2021/914），并辅以传输影响评估（TIA）。
 
@@ -179,7 +179,7 @@ EEA 用户通过全球区域处理的个人数据存储在**中国香港特别�
 
 ### 7. 数据处理协议（DPA）
 
-符合 GDPR 第 28 条的数据处理协议可应企业和 B2B 客户的要求提供。如需申请 DPA，请联系：**legal@zqaiip.com**
+符合 GDPR 第 28 条的数据处理协议可应企业和 B2B 客户的要求提供。如需申请 DPA，请联系：**lengqifeng11@gmail.com**
 
 ### 8. 子处理者
 

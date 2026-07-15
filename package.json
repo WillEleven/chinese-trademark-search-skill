@@ -17,7 +17,7 @@
   },
   "keywords": ["trademark", "china", "search", "api", "openclaw", "cnipa"],
   "author": "ZhengQu AI IP",
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN API_TERMS_OF_USE.md",
   "files": ["scripts/", "agents/", "*.md"],
   "scripts": {
     "lint": "node -e \"console.log('lint placeholder: no third-party dependencies')\"",

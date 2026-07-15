@@ -57,7 +57,7 @@ The platform will **not** discriminate against you for exercising your CCPA righ
 
 To exercise any of your CCPA rights, contact:
 
-**Email:** privacy@zqaiip.com
+**Email:** lengqifeng11@gmail.com
 
 **Subject line:** "CCPA Request - [Right to Know / Right to Delete / Other]"
 
@@ -130,7 +130,7 @@ Query logs and associated personal information are retained for 12 months. See [
 
 如需行使您的 CCPA 权利，请联系：
 
-**电子邮件：** privacy@zqaiip.com
+**电子邮件：** lengqifeng11@gmail.com
 
 **邮件主题：** "CCPA Request - [知情权 / 删除权 / 其他]"
 

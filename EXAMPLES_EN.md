@@ -4,7 +4,7 @@ The following examples are intended as reference for OpenClaw when using this Sk
 
 1. Search for trademarks registered under "TechBrand Inc." in China. Show me the first page.
 2. Look up the trademark keyword "TechBrand" and tell me how many points the search will cost first.
-3. Continue to the next page of the previous search results.
+3. If I ask for the next page, tell me that pagination is not currently supported and each search returns only the first page of up to 50 results.
 4. Open the details for trademark `tm_20260310_0001`. Let me know if it will cost any points first.
 5. Export the 3 trademarks from the last search as a file.
 6. I want to export 68 results. First calculate the estimated point cost, then let me decide whether to proceed.

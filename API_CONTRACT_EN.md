@@ -24,6 +24,35 @@ Authorization: Bearer {CHINA_TM_USER_TOKEN}
 Content-Type: application/json
 ```
 
+### Idempotency Header (Billing Reliability)
+
+Clients may send an `X-OC-Request-Id` header (8-64 characters, charset `[A-Za-z0-9_-]`) as an idempotency key; reusing the same ID on network retries will not cause double charges. The CLI handles this automatically.
+
+```http
+X-OC-Request-Id: req_a1B2c3D4e5F6
+```
+
+### Automatic Refund on Failure
+
+- Failed searches (upstream errors) are automatically refunded; the API returns 500 `SERVER_ERROR` with `refundedPoints` in the body
+- Failed detail lookups (upstream errors) are automatically refunded; the API returns 502 `UPSTREAM_ERROR`
+- Failed export job creation is automatically refunded
+
+### Insufficient Points (HTTP 402)
+
+When points are insufficient, the API returns HTTP 402 with this body:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "POINTS_NOT_ENOUGH",
+    "message": "点数不足，请先充值",
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
+  }
+}
+```
+
 ---
 
 ## 1. GET /v1/openclaw/capabilities
@@ -55,14 +84,17 @@ Authorization: Bearer tmu_demo_user_token
   },
   "metering": {
     "search": { "estimatedPoints": 1, "label": "Search costs an estimated 1 point" },
-    "page": { "estimatedPoints": 1, "label": "Paging costs an estimated 1 point" },
-    "detail": { "estimatedPoints": 1, "label": "Detail lookup costs an estimated 1 point" },
+    "detail": { "estimatedPoints": 2, "label": "Detail lookup costs an estimated 2 points" },
     "exportTiers": [
       { "min": 1, "max": 10, "points": 1 },
       { "min": 11, "max": 50, "points": 3 },
       { "min": 51, "max": 100, "points": 5 },
-      { "min": 101, "max": 500, "points": 10 }
+      { "min": 101, "max": null, "points": 10 }
     ]
+  },
+  "billing": {
+    "pointsPerYuan": 5,
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
   },
   "featureEntitlements": [
     { "code": "renew_monitor", "name": "Renewal Monitoring", "enabled": true },
@@ -76,7 +108,9 @@ Authorization: Bearer tmu_demo_user_token
 
 ## 2. POST /v1/openclaw/trademarks/search
 
-Execute a trademark search.
+Execute a trademark search. Each search costs 1 point and always returns the first page of up to 50 results.
+
+**Pagination is not currently supported**: passing `page` greater than 1 returns a `PAGINATION_NOT_SUPPORTED` error and no points are charged.
 
 ### Request Example
 
@@ -143,14 +177,40 @@ Execute a trademark search.
 }
 ```
 
-### Insufficient Points Example
+### Insufficient Points Example (HTTP 402)
 
 ```json
 {
   "success": false,
   "error": {
     "code": "POINTS_NOT_ENOUGH",
-    "message": "Insufficient points. Please top up before searching."
+    "message": "点数不足，请先充值",
+    "rechargeUrl": "https://tm.zhengquai.com/billing"
+  }
+}
+```
+
+### Pagination Not Supported Example (no points charged)
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "PAGINATION_NOT_SUPPORTED",
+    "message": "Pagination is not currently supported. Each search returns the first page of up to 50 results."
+  }
+}
+```
+
+### Search Failure Auto-Refund Example (HTTP 500)
+
+```json
+{
+  "success": false,
+  "refundedPoints": 1,
+  "error": {
+    "code": "SERVER_ERROR",
+    "message": "Upstream search error. The charged points have been automatically refunded."
   }
 }
 ```
@@ -171,7 +231,7 @@ Execute a trademark search.
 
 ## 3. GET /v1/openclaw/trademarks/{tmid}
 
-Retrieve details for a specific trademark.
+Retrieve details for a specific trademark. Each trademark detail costs 2 points (two upstream calls are required); **viewing a trademark whose detail was already purchased is not charged again**. Upstream failures are automatically refunded with a 502 `UPSTREAM_ERROR` response.
 
 ### Request Example
 
@@ -185,8 +245,9 @@ Authorization: Bearer tmu_demo_user_token
 ```json
 {
   "success": true,
-  "estimatedPoints": 1,
-  "chargedPoints": 1,
+  "estimatedPoints": 2,
+  "chargedPoints": 2,
+  "alreadyPurchased": false,
   "remainingPoints": 84,
   "trademark": {
     "tmid": "tm_20260310_0001",
@@ -220,7 +281,7 @@ Authorization: Bearer tmu_demo_user_token
 
 ## 4. POST /v1/openclaw/trademarks/export
 
-Create an export job.
+Create an export job. Failed export job creation is automatically refunded.
 
 ### Request Example
 
@@ -284,7 +345,7 @@ Authorization: Bearer tmu_demo_user_token
   "exportJobId": "exp_20260310_0003",
   "status": "completed",
   "fileName": "Chongqing_Huayuan_Technology_trademark_export_2026-03-10.csv",
-  "downloadUrl": "https://tm.example.cn/downloads/exp_20260310_0003.csv",
+  "downloadUrl": "https://tm.zhengquai.com/downloads/exp_20260310_0003.csv",
   "createdAt": "2026-03-10T09:18:00+08:00",
   "completedAt": "2026-03-10T09:18:12+08:00"
 }
@@ -382,24 +443,22 @@ Authorization: Bearer tmu_demo_user_token
 {
   "success": true,
   "bound": false,
-  "bindUrl": "https://openclaw.zqip.cn",
-  "bindUrls": {
-    "china": "https://openclaw.zqip.cn",
-    "global": "https://openclaw.zqaiip.com"
-  },
-  "recommendedRegion": "china",
+  "bindUrl": "https://tm.zhengquai.com",
+  "registerUrl": "https://tm.zhengquai.com/register",
+  "apiKeysUrl": "https://tm.zhengquai.com/settings/api-keys",
+  "rechargeUrl": "https://tm.zhengquai.com/billing",
   "steps": [
-    "Visit the OpenClaw domain appropriate for your region and register an account",
-    "Users in China should use openclaw.zqip.cn; users outside China should use openclaw.zqaiip.com",
-    "The platform may automatically recommend the most suitable domain based on IP or region",
-    "Navigate to the OpenClaw binding page",
-    "Confirm the organization associated with your account",
-    "Generate or paste your user-level token",
-    "After completing binding, return to OpenClaw and retry"
+    "访问 https://tm.zhengquai.com/register 注册账号并创建组织",
+    "登录后进入设置页生成 API Key（tmu_ 前缀，仅显示一次）",
+    "将 API Key 配置为环境变量 CHINA_TM_USER_TOKEN",
+    "将 CHINA_TM_PLATFORM_BASE_URL 配置为 https://tm.zhengquai.com",
+    "重试 capabilities 验证绑定状态"
   ],
-  "trialNotice": "After initial binding, eligible new organizations may receive 50 trial points"
+  "trialNotice": "新注册组织赠送 10 点体验点（30 天有效）；点数用完可在充值页充值，¥1 = 5 点"
 }
 ```
+
+> The `steps` and `trialNotice` fields are returned by the platform in Chinese. In English: register at `https://tm.zhengquai.com/register`, generate an API Key on the settings page after logging in (`tmu_` prefix, shown only once), set it as `CHINA_TM_USER_TOKEN`, set `CHINA_TM_PLATFORM_BASE_URL` to `https://tm.zhengquai.com`, then retry `capabilities`. New organizations receive 10 trial points (valid for 30 days); top up at the billing page, 1 CNY = 5 points.
 
 ---
 
@@ -410,11 +469,13 @@ Authorization: Bearer tmu_demo_user_token
 | `ENV_MISSING` | Required environment variable is missing |
 | `HTTPS_REQUIRED` | Base URL must use HTTPS |
 | `BIND_REQUIRED` | Platform account binding is required |
-| `POINTS_NOT_ENOUGH` | Insufficient points |
+| `POINTS_NOT_ENOUGH` | Insufficient points (HTTP 402, body includes `rechargeUrl`) |
+| `PAGINATION_NOT_SUPPORTED` | Pagination is not currently supported (`page` > 1, no points charged) |
 | `FEATURE_NOT_ENABLED` | Module is not enabled |
 | `UNAUTHORIZED` | Token is invalid or expired |
 | `FORBIDDEN` | Current user does not have access to this resource |
 | `RATE_LIMITED` | Too many requests |
 | `UPSTREAM_TIMEOUT` | Platform API timed out |
-| `SERVER_ERROR` | Platform internal error |
+| `UPSTREAM_ERROR` | Upstream error (HTTP 502, charged detail points are automatically refunded) |
+| `SERVER_ERROR` | Platform internal error (failed searches are automatically refunded; body includes `refundedPoints`) |
 | `EXPORT_TIMEOUT` | Export status polling exceeded maximum attempts |

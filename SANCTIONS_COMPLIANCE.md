@@ -53,7 +53,7 @@ The platform reserves the right to implement technical measures to enforce compl
 
 ### Reporting
 
-If you become aware of any potential sanctions violation related to the use of this service, please report it immediately to: **compliance@zqaiip.com**
+If you become aware of any potential sanctions violation related to the use of this service, please report it immediately to: **lengqifeng11@gmail.com**
 
 ### Consequences of Violation
 
@@ -113,7 +113,7 @@ Violations of export control and sanctions laws may result in:
 
 ### 举报
 
-如发现任何与本服务使用相关的潜在制裁违规行为，请立即报告至：**compliance@zqaiip.com**
+如发现任何与本服务使用相关的潜在制裁违规行为，请立即报告至：**lengqifeng11@gmail.com**
 
 ### 违规后果
 

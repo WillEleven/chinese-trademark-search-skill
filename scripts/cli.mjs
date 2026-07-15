@@ -11,6 +11,8 @@
  * - Always returns structured JSON to stdout
  */
 
+import { randomUUID } from 'node:crypto';
+
 const DEFAULT_TIMEOUT_MS = 15000;
 const DEFAULT_CHANNEL = 'clawhub';
 const DEFAULT_PAGE_SIZE = 50;
@@ -55,7 +57,7 @@ const MESSAGES = {
     helpSummary: '中国商标查询 Skill CLI',
     legalDisclaimer: '商标查询结果仅供参考，不构成法律意见。',
     noteSearch: '查询前预计消耗 1 点',
-    noteDetail: '详情前预计消耗 1 点',
+    noteDetail: '详情前预计消耗 2 点（同一商标已购不重复扣点）',
     noteExport: '导出按条数阶梯扣点',
     noteBind: '未绑定时请先执行 bind-help',
     retrying: (attempt, delay) => `第 ${attempt} 次重试，等待 ${delay}ms ...`,
@@ -92,7 +94,7 @@ const MESSAGES = {
     helpSummary: 'Chinese Trademark Search Skill CLI',
     legalDisclaimer: 'Trademark search results are for reference only, not legal advice.',
     noteSearch: 'Search costs an estimated 1 point',
-    noteDetail: 'Detail lookup costs an estimated 1 point',
+    noteDetail: 'Detail lookup costs an estimated 2 points (no re-charge for already purchased trademarks)',
     noteExport: 'Export costs points based on item count tiers',
     noteBind: 'If not bound, run bind-help first',
     retrying: (attempt, delay) => `Retry #${attempt}, waiting ${delay}ms ...`,
@@ -301,7 +303,10 @@ function readEnv(lang) {
     token,
     timeoutMs,
     channel,
-    lang
+    lang,
+    // 本次 CLI 调用的稳定幂等键：同一次命令内的自动重试复用同一 ID，
+    // 平台按 X-OC-Request-Id 去重扣点，网络重试不会重复计费。
+    requestId: `cli_${randomUUID().replace(/-/g, '')}`
   };
 }
 
@@ -516,7 +521,8 @@ async function apiRequest(env, method, path, body) {
 
   const headers = {
     'Accept': 'application/json',
-    'Authorization': `Bearer ${env.token}`
+    'Authorization': `Bearer ${env.token}`,
+    'X-OC-Request-Id': env.requestId
   };
 
   if (body !== undefined) {

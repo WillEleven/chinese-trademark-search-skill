@@ -1,7 +1,7 @@
 # Pricing / 定价说明
 
 **Effective Date:** 2026-03-28
-**Last Updated:** 2026-03-28
+**Last Updated:** 2026-07-14
 
 ---
 
@@ -15,42 +15,55 @@ The platform uses an abstract **points-based** billing system. Points are consum
 
 | Operation | Points Cost |
 |---|---|
-| Search (per query) | 1 point |
-| Detail (per trademark) | 1 point |
+| Search (per query) | 1 point (returns the first 50 results) |
+| Detail (per trademark) | 2 points (two upstream calls required) |
 | Export: 1 - 10 records | 1 point |
 | Export: 11 - 50 records | 3 points |
-| Export: 51 - 200 records | 5 points |
-| Export: 201+ records | 10 points |
+| Export: 51 - 100 records | 5 points |
+| Export: 101+ records | 10 points |
 
 **Notes:**
-- Page navigation within an existing search result set may consume additional points. Refer to the platform's real-time billing prompts.
+- Pagination is **not currently supported**: each search returns only the first page (up to 50 results); requesting a page greater than 1 returns a `PAGINATION_NOT_SUPPORTED` error and no points are charged.
+- Viewing a trademark whose detail was already purchased is **not charged again**.
+- Failed operations are automatically refunded: failed searches (upstream errors), failed detail lookups (upstream errors), and failed export job creation.
 - The platform reserves the right to adjust pricing with 30 days' prior notice.
 
 ### Currency Conversion Reference
 
-The following approximate conversions are provided for reference only. Actual pricing may vary based on payment method, region, and exchange rates at the time of purchase.
+Points are purchased at **1 CNY = 5 points** (1 point = 0.20 CNY, approx. 0.03 USD / 0.026 EUR). The USD/EUR figures below are approximate reference values only; actual pricing may vary based on payment method, region, and exchange rates at the time of purchase.
 
-| Points | Approx. CNY | Approx. USD | Approx. EUR |
+| Points | CNY | Approx. USD | Approx. EUR |
 |---|---|---|---|
-| 1 point | ~5.00 CNY | ~0.70 USD | ~0.65 EUR |
-| 10 points | ~50.00 CNY | ~7.00 USD | ~6.50 EUR |
-| 50 points | ~250.00 CNY | ~35.00 USD | ~32.50 EUR |
-| 100 points | ~500.00 CNY | ~70.00 USD | ~65.00 EUR |
+| 1 point | 0.20 CNY | ~0.03 USD | ~0.026 EUR |
+| 10 points | 2.00 CNY | ~0.30 USD | ~0.26 EUR |
+| 50 points | 10.00 CNY | ~1.50 USD | ~1.30 EUR |
+| 100 points | 20.00 CNY | ~3.00 USD | ~2.60 EUR |
 
-These are **approximate reference values** and do not constitute a fixed exchange rate. The platform may adjust point pricing at its discretion.
+### Recharge Tiers (Bonus Points)
+
+Larger recharges receive bonus points. Recharge at **https://tm.zhengquai.com/billing**:
+
+| Recharge Amount | Bonus |
+|---|---|
+| 50 CNY | — |
+| 100 CNY | +5% |
+| 300 CNY | +10% |
+| 500 CNY | +15% |
+| 1000 CNY | +20% |
+| 2000 CNY | +25% |
 
 ### Trial Points
 
-- New accounts may receive **trial points** upon registration, subject to availability and promotional terms.
+- New organizations receive **10 trial points** upon registration.
 - Trial points **expire 30 days** from the date of issuance.
-- Whether trial points are available, the quantity issued, and eligibility conditions are determined solely by the platform and may change without notice.
+- Actual issuance is subject to the platform's real-time response.
 - Expired trial points cannot be reinstated.
 
 ### Refund Policy
 
 - **Paid points are non-refundable** once credited to the account, except where required by applicable consumer protection law.
 - If applicable law in your jurisdiction requires a refund mechanism (e.g., EU consumer right of withdrawal within 14 days for unused points), the platform will comply with such requirements.
-- To inquire about refunds under applicable law, contact: **billing@zqaiip.com**
+- To inquire about refunds under applicable law, contact: **lengqifeng11@gmail.com**
 
 ### Payment Methods
 
@@ -68,42 +81,55 @@ Payment methods and options vary by region. Please refer to the platform interfa
 
 | 操作 | 点数消耗 |
 |---|---|
-| 查询（每次） | 1 点 |
-| 详情（每条商标） | 1 点 |
+| 查询（每次） | 1 点（返回前 50 条结果） |
+| 详情（每条商标） | 2 点（因需调用上游两次） |
 | 导出：1 - 10 条记录 | 1 点 |
 | 导出：11 - 50 条记录 | 3 点 |
-| 导出：51 - 200 条记录 | 5 点 |
-| 导出：201 条及以上 | 10 点 |
+| 导出：51 - 100 条记录 | 5 点 |
+| 导出：101 条及以上 | 10 点 |
 
 **说明：**
-- 在已有查询结果集中翻页可能消耗额外点数。请参阅平台的实时计费提示。
+- **翻页暂不支持**：每次查询固定返回第一页前 50 条；请求页码大于 1 会返回 `PAGINATION_NOT_SUPPORTED` 错误且不扣点。
+- 同一商标已购详情后再次查看**不重复扣点**。
+- 失败自动退点：查询失败（上游异常）、详情上游失败、导出任务创建失败均自动退点。
 - 平台保留在提前 30 天通知后调整定价的权利。
 
 ### 货币换算参考
 
-以下提供的近似换算仅供参考。实际定价可能因支付方式、区域和购买时的汇率而异。
+点数按 **¥1 = 5 点**充值（1 点 = ¥0.20，约合 $0.03 / €0.026）。以下美元/欧元为近似参考值，实际定价可能因支付方式、区域和购买时的汇率而异。
 
-| 点数 | 约人民币（CNY） | 约美元（USD） | 约欧元（EUR） |
+| 点数 | 人民币（CNY） | 约美元（USD） | 约欧元（EUR） |
 |---|---|---|---|
-| 1 点 | ~5.00 元 | ~0.70 美元 | ~0.65 欧元 |
-| 10 点 | ~50.00 元 | ~7.00 美元 | ~6.50 欧元 |
-| 50 点 | ~250.00 元 | ~35.00 美元 | ~32.50 欧元 |
-| 100 点 | ~500.00 元 | ~70.00 美元 | ~65.00 欧元 |
+| 1 点 | ¥0.20 | ~$0.03 | ~€0.026 |
+| 10 点 | ¥2.00 | ~$0.30 | ~€0.26 |
+| 50 点 | ¥10.00 | ~$1.50 | ~€1.30 |
+| 100 点 | ¥20.00 | ~$3.00 | ~€2.60 |
 
-以上为**近似参考值**，不构成固定汇率。平台可自行调整点数定价。
+### 充值档位（充多得多）
+
+充值金额越大，赠送比例越高。充值入口：**https://tm.zhengquai.com/billing**
+
+| 充值金额 | 赠送 |
+|---|---|
+| ¥50 | — |
+| ¥100 | +5% |
+| ¥300 | +10% |
+| ¥500 | +15% |
+| ¥1000 | +20% |
+| ¥2000 | +25% |
 
 ### 体验点
 
-- 新账户注册时可能获得**体验点**，具体视可用性和促销条款而定。
+- 新注册组织赠送 **10 点体验点**。
 - 体验点自发放之日起 **30 天内过期**。
-- 体验点是否可用、发放数量及资格条件由平台全权决定，可不经通知变更。
+- 实际发放以平台实际返回为准。
 - 过期的体验点无法恢复。
 
 ### 退款政策
 
 - **已付费点数一经充值到账即不可退款**，除非适用的消费者保护法律另有要求。
 - 如果您所在司法管辖区的适用法律要求退款机制（如欧盟消费者对未使用点数在 14 天内的撤回权），平台将遵守相关要求。
-- 如需咨询依据适用法律的退款事宜，请联系：**billing@zqaiip.com**
+- 如需咨询依据适用法律的退款事宜，请联系：**lengqifeng11@gmail.com**
 
 ### 支付方式
 

@@ -1,10 +1,10 @@
 # Chinese Trademark Search Skill / 中国商标查询 Skill
 
-A public Skill for OpenClaw / ClawHub that connects to a proprietary trademark SaaS platform API, enabling users to search Chinese trademarks, browse results, view details, export data, check point balances, view modules, and get onboarding guidance. Deployed globally with regional endpoints for mainland China and international users.
+A public Skill for OpenClaw / ClawHub that connects to a proprietary trademark SaaS platform API, enabling users to search Chinese trademarks, browse results, view details, export data, check point balances, view modules, and get onboarding guidance. Currently deployed as a single region (mainland China, entry point `tm.zhengquai.com`); an overseas region is planned.
 
 ---
 
-这是一个面向 OpenClaw / ClawHub 的公开 Skill，用于连接”自有商标 SaaS 平台 API”，帮助用户完成中国商标查询、翻页、详情查看、导出、点数检查、模块查看与绑定引导。
+这是一个面向 OpenClaw / ClawHub 的公开 Skill，用于连接”自有商标 SaaS 平台 API”，帮助用户完成中国商标查询、详情查看、导出、点数检查、模块查看与绑定引导。
 
 本 Skill 不直连上游商标数据商接口，也不要求用户提供上游账号密码。用户只需要配置自己在平台中的用户级 token。
 
@@ -16,9 +16,8 @@ A public Skill for OpenClaw / ClawHub that connects to a proprietary trademark S
 
 ## 适用场景
 
-- 查询企业或个人名下商标
+- 查询企业或个人名下商标（每次查询返回前 50 条结果，暂不支持翻页）
 - 查看商标详情
-- 翻页浏览查询结果
 - 发起导出任务
 - 查看点数余额与能力限制
 - 查看已开通增值模块
@@ -42,10 +41,10 @@ node {baseDir}/scripts/cli.mjs help
 
 ### `CHINA_TM_PLATFORM_BASE_URL`
 
-自有商标 SaaS 平台 API 基础地址，例如：
+自有商标 SaaS 平台 API 基础地址：
 
 ```bash
-CHINA_TM_PLATFORM_BASE_URL=https://tm.example.cn
+CHINA_TM_PLATFORM_BASE_URL=https://tm.zhengquai.com
 ```
 
 ### `CHINA_TM_USER_TOKEN`
@@ -74,27 +73,31 @@ CHINA_TM_SKILL_CHANNEL=clawhub
 
 ## 注册与绑定入口
 
-- 中国区域访问：`https://openclaw.zqip.cn`
-- 国外区域访问：`https://openclaw.zqaiip.com`
+平台入口统一为 `https://tm.zhengquai.com`（当前为单区域部署，中国大陆节点；海外节点在规划中）。三步完成绑定：
 
-建议用户根据所在区域选择对应域名进行注册和绑定。中国区域使用大陆节点，国外区域使用中国香港节点。
-平台侧也可以根据用户 IP 或区域策略自动推荐更合适的注册入口，但最终以用户可稳定访问的域名为准。
+1. 访问 `https://tm.zhengquai.com/register` 注册账号并创建组织
+2. 登录后在设置页 `https://tm.zhengquai.com/settings/api-keys` 生成 API Key（`tmu_` 前缀，仅创建时显示一次）
+3. 配置环境变量：`CHINA_TM_USER_TOKEN`（填 API Key）与 `CHINA_TM_PLATFORM_BASE_URL=https://tm.zhengquai.com`
 
 ## 体验点说明
 
-首次绑定后，符合条件的新组织可能获得 50 点体验点。是否发放、何时发放、是否仍在活动期，以平台返回为准。
+新注册组织赠送 10 点体验点，30 天有效。具体以平台实际返回为准。
 
 ## 点数规则
 
 当前默认计费说明如下：
 
-- 查询：1 点
-- 翻页：1 点
-- 详情：1 点
+- 查询（每次）：1 点，返回前 50 条结果
+- 翻页：暂不支持（每次查询固定返回第一页前 50 条；`--page` 大于 1 会返回 `PAGINATION_NOT_SUPPORTED` 错误且不扣点）
+- 详情（每条商标）：2 点（因需调用上游两次）；同一商标已购详情后再次查看不重复扣点
 - 导出 1~10 条：1 点
 - 导出 11~50 条：3 点
 - 导出 51~100 条：5 点
-- 导出 101~500 条：10 点
+- 导出 101 条及以上：10 点
+
+计费可靠性：查询失败（上游异常）、详情上游失败、导出任务创建失败均自动退点；CLI 自动附带幂等请求头 `X-OC-Request-Id`，网络重试不会重复扣点。
+
+点价：¥1 = 5 点（1 点 = ¥0.20）。点数不足时接口返回 HTTP 402，可前往充值页 `https://tm.zhengquai.com/billing` 充值。
 
 使用前请以平台接口返回的实际计费提示为准。
 
@@ -134,7 +137,7 @@ CHINA_TM_SKILL_CHANNEL=clawhub
 node scripts/cli.mjs help
 node scripts/cli.mjs bind-help
 node scripts/cli.mjs capabilities
-node scripts/cli.mjs search --query "华源科技" --page 1
+node scripts/cli.mjs search --query "华源科技"
 node scripts/cli.mjs detail --tmid "tm_20260310_0001"
 node scripts/cli.mjs export --queryId "qry_20260310_0008" --tmids "tm_001,tm_002"
 node scripts/cli.mjs export-status --jobId "exp_20260310_0003"
@@ -183,14 +186,13 @@ This Skill is deployed globally and is subject to multiple data protection regim
 
 ### Data Residency / 数据驻留
 
-The platform operates two isolated regional deployments:
+The platform currently operates a single-region deployment:
 
-| Region | Domain | Data Location | Applicable Law |
+| Region | Entry Point | Data Location | Applicable Law |
 |---|---|---|---|
-| China Mainland | `zqip.cn` | Mainland China | PIPL |
-| Global | `zqaiip.com` | Hong Kong SAR | PDPO |
+| China Mainland | `tm.zhengquai.com` | Mainland China | PIPL |
 
-Databases are **not shared** between regions. EU users are recommended to use the HK region. See [DATA_RESIDENCY.md](DATA_RESIDENCY.md).
+An overseas region is planned but not yet available. See [DATA_RESIDENCY.md](DATA_RESIDENCY.md).
 
 ### Export Control Warning / 出口管制警告
 

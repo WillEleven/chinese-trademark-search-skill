@@ -48,10 +48,10 @@ Users **shall not**:
 
 | Metric | Target |
 |---|---|
-| Uptime | 99.5% monthly availability |
+| Uptime | 99.5% monthly availability (service target) |
 | Search Response Time | < 5 seconds (95th percentile) |
 
-- Service level targets are **goals, not guarantees**. The platform will use commercially reasonable efforts to meet these targets.
+- The 99.5% uptime figure is an **availability target, not a contractual guarantee**, and does not constitute a basis for compensation claims. Service level targets are goals; the platform will use commercially reasonable efforts to meet them.
 - Scheduled maintenance windows will be announced at least 48 hours in advance when possible.
 - The platform is not liable for downtime caused by force majeure, third-party infrastructure failures, or circumstances beyond its reasonable control.
 
@@ -83,7 +83,7 @@ The platform may modify these Terms of Use at any time. Material changes will be
 
 ### 9. Governing Law
 
-These Terms of Use are governed by the laws of the Hong Kong Special Administrative Region for users of the Global region (`zqaiip.com`), and by the laws of the People's Republic of China for users of the China mainland region (`zqip.cn`).
+These Terms of Use are governed by the laws of the People's Republic of China. The platform currently operates a single-region deployment in mainland China with the entry point `tm.zhengquai.com`; an overseas region is planned, and governing-law terms for it will be published when it launches.
 
 ---
 
@@ -130,10 +130,10 @@ These Terms of Use are governed by the laws of the Hong Kong Special Administrat
 
 | 指标 | 目标 |
 |---|---|
-| 可用性 | 每月 99.5% |
+| 可用性 | 每月 99.5%（目标可用性，service target） |
 | 查询响应时间 | < 5 秒（95 分位） |
 
-- 服务水平目标是**努力目标，非保证**。平台将尽商业上合理的努力达成上述目标。
+- 99.5% 可用性为**目标可用性（service target），不构成合同承诺或赔偿依据**。服务水平目标是努力目标，平台将尽商业上合理的努力达成上述目标。
 - 计划维护窗口将尽可能提前至少 48 小时通知。
 - 对于因不可抗力、第三方基础设施故障或超出合理控制范围的情况导致的停机，平台不承担责任。
 
@@ -165,4 +165,4 @@ These Terms of Use are governed by the laws of the Hong Kong Special Administrat
 
 ### 9. 适用法律
 
-对于全球区域（`zqaiip.com`）的用户，本使用条款受中国香港特别行政区法律管辖；对于中国大陆区域（`zqip.cn`）的用户，受中华人民共和国法律管辖。
+本使用条款受中华人民共和国法律管辖。平台当前为单区域部署（中国大陆，入口 `tm.zhengquai.com`）；海外节点在规划中，其适用法律条款将在上线时另行公布。

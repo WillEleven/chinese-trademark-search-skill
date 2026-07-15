@@ -1,8 +1,8 @@
 ---
-name: chinese_trademark_search_skill
+name: chinese-trademark-search-skill
 description: Connects to the Chinese trademark search hosted platform API, handling trademark search, details, export, points and module checks, and binding guidance. Designed for use within OpenClaw / ClawHub via a local Node CLI skill invocation.
-homepage: https://openclaw.zqip.cn
-metadata: {"skillKey":"chinese_trademark_search_skill","homepage":"https://openclaw.zqip.cn","tags":["china","trademark","商标","search","openclaw","clawhub"]}
+homepage: https://tm.zhengquai.com
+metadata: {"skillKey":"chinese-trademark-search-skill","homepage":"https://tm.zhengquai.com","tags":["china","trademark","商标","search","openclaw","clawhub"]}
 ---
 
 # Chinese Trademark Search Skill
@@ -26,7 +26,7 @@ OpenClaw should invoke this Skill via the local Node CLI:
 node {baseDir}/scripts/cli.mjs help
 node {baseDir}/scripts/cli.mjs bind-help
 node {baseDir}/scripts/cli.mjs capabilities
-node {baseDir}/scripts/cli.mjs search --query "华源科技" --page 1 --pageSize 50
+node {baseDir}/scripts/cli.mjs search --query "华源科技"
 node {baseDir}/scripts/cli.mjs detail --tmid "tm_20260310_0001"
 node {baseDir}/scripts/cli.mjs export --queryId "qry_20260310_0008" --tmids "tm_001,tm_002"
 node {baseDir}/scripts/cli.mjs export-status --jobId "exp_20260310_0003"
@@ -40,9 +40,9 @@ node {baseDir}/scripts/cli.mjs modules
 If any of `capabilities`, `search`, `detail`, `export`, or `modules` responses indicate the user is not bound:
 
 - First call `bind-help`
-- Tell the user the binding URL
-  - For users in China, prefer `https://openclaw.zqip.cn`
-  - For users outside China, prefer `https://openclaw.zqaiip.com`
+- Tell the user the platform URL: `https://tm.zhengquai.com`
+  - Registration page: `https://tm.zhengquai.com/register`
+  - API Key generation: after logging in, go to the settings page `https://tm.zhengquai.com/settings/api-keys` (keys use the `tmu_` prefix and are shown only once at creation)
 - Explain the binding steps
 - Tell the user to complete binding before continuing with search or export
 - Do not execute any cost-bearing actions
@@ -51,8 +51,8 @@ If any of `capabilities`, `search`, `detail`, `export`, or `modules` responses i
 
 Before initiating any cost-bearing action, inform the user:
 
-- Before search: estimated cost of 1 point
-- Before detail: estimated cost of 1 point
+- Before search: estimated cost of 1 point (returns the first 50 results)
+- Before detail: estimated cost of 2 points (viewing a trademark whose detail was already purchased is not charged again)
 - Before export: estimated cost based on item count
 
 Export estimated point cost tiers:
@@ -60,14 +60,18 @@ Export estimated point cost tiers:
 - 1-10 items: 1 point
 - 11-50 items: 3 points
 - 51-100 items: 5 points
-- 101-500 items: 10 points
+- 101+ items: 10 points
+
+Pagination: **not currently supported**. Each search returns only the first page (up to 50 results); passing `--page` greater than 1 returns a `PAGINATION_NOT_SUPPORTED` error and no points are charged. If the user asks for the next page, explain that pagination is not currently supported and suggest refining the search keyword.
+
+Billing reliability: failed searches (upstream errors) are automatically refunded; failed detail lookups (upstream errors) are automatically refunded; failed export job creation is automatically refunded. The CLI automatically attaches an idempotency header `X-OC-Request-Id`, so network retries will not cause double charges.
 
 ### 3. Handling Insufficient Points
 
-If the platform returns an insufficient points error:
+If the platform returns an insufficient points error (HTTP 402, error code `POINTS_NOT_ENOUGH`):
 
 - Clearly state "insufficient points"
-- Guide the user to the platform to top up
+- Guide the user to top up: the `rechargeUrl` in the 402 response body (`https://tm.zhengquai.com/billing`) can be given to the user directly
 - Never fabricate results
 - Never retry cost-bearing API calls repeatedly
 
@@ -91,7 +95,7 @@ Modules that may be involved:
 ### 5. Output Style
 
 - Provide a summary first, then necessary details
-- When there are too many search results, display the first few and prompt that the user can continue paging
+- When there are too many search results, display the first few and explain that only the first 50 results are returned and pagination is not currently supported
 - For export jobs, prioritize showing job status, estimated points, and how to retrieve the export file
 - For any uncertain information, state "subject to platform response"
 
@@ -101,13 +105,12 @@ Modules that may be involved:
 
 1. If needed, first call `capabilities`
 2. Inform the user: "Estimated cost: 1 point"
-3. Execute `search --query "<keyword>" --page 1`
-4. Display a summary of results and remaining points
-5. If the user requests the next page, continue with `search --query "<keyword>" --page N`
+3. Execute `search --query "<keyword>"`
+4. Display a summary of results and remaining points (only the first page of up to 50 results is returned; pagination is not currently supported)
 
 ### Detail
 
-1. Inform the user: "Estimated cost: 1 point"
+1. Inform the user: "Estimated cost: 2 points" (viewing a trademark whose detail was already purchased is not charged again)
 2. Execute `detail --tmid "<tmid>"`
 3. Return core information: trademark name, applicant, international class, application number, registration number, status, validity period, etc.
 

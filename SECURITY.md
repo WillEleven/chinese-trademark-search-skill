@@ -69,34 +69,31 @@ For full details, see [SANCTIONS_COMPLIANCE.md](SANCTIONS_COMPLIANCE.md).
 
 ## Data Residency Architecture / 数据驻留架构
 
-The platform operates two completely independent regional deployments:
+The platform currently operates a single-region deployment:
 
-| Region | Domain | Data Location | Applicable Law |
+| Region | Entry Point | Data Location | Applicable Law |
 |---|---|---|---|
-| China Mainland | `zqip.cn` | Mainland China | PIPL, DSL, CSL |
-| Global | `zqaiip.com` | Hong Kong SAR | PDPO (Cap. 486) |
+| China Mainland | `tm.zhengquai.com` | Mainland China | PIPL, DSL, CSL |
 
-Key security properties of this architecture:
+An overseas region is planned but not yet available. Key security properties:
 
-- **Database isolation:** No data synchronization, mirroring, or sharing between regions.
-- **Independent infrastructure:** Each region runs on separate infrastructure with independent access controls.
-- **Regional compliance:** Each deployment is configured to comply with its applicable data protection framework.
-- **User choice:** Users select their region at registration; data residency is determined for the account lifetime.
+- **Independent infrastructure:** The deployment runs on dedicated infrastructure with strict access controls.
+- **Regional compliance:** The deployment is configured to comply with its applicable data protection framework (PIPL, DSL, CSL).
 
 For full details, see [DATA_RESIDENCY.md](DATA_RESIDENCY.md).
 
-两个区域部署完全独立，数据库不共享。每个区域运行在独立基础设施上，具有独立的访问控制。详情请参阅 [DATA_RESIDENCY.md](DATA_RESIDENCY.md)。
+平台当前为单区域部署（中国大陆，入口 `tm.zhengquai.com`），海外节点在规划中。详情请参阅 [DATA_RESIDENCY.md](DATA_RESIDENCY.md)。
 
 ## GDPR Cross-Border Mechanisms / GDPR 跨境传输机制
 
-For EU/EEA users accessing the Global region (`zqaiip.com`), personal data is stored in Hong Kong SAR. As Hong Kong has not received an adequacy decision from the European Commission, the following safeguards are in place:
+The platform currently operates only the mainland China region (`tm.zhengquai.com`), so personal data of EU/EEA users is stored in mainland China. The following safeguards are in place:
 
 - **Standard Contractual Clauses (SCCs):** Commission Implementing Decision (EU) 2021/914, supplemented by a Transfer Impact Assessment (TIA).
 - **Encryption:** TLS 1.2+ in transit, AES-256 at rest.
 - **Access controls:** Data access restricted to authorized personnel with role-based permissions.
 - **Sub-processor management:** DPAs with all sub-processors; 30-day advance notice of changes.
-- **Data Processing Agreement (DPA):** Available on request for enterprise customers (contact: legal@zqaiip.com).
+- **Data Processing Agreement (DPA):** Available on request for enterprise customers (contact: lengqifeng11@gmail.com).
 
 For full GDPR compliance details, see [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md).
 
-针对访问全球区域（`zqaiip.com`）的欧盟/EEA 用户，个人数据存储在中国香港特别行政区。平台通过标准合同条款（SCCs）及传输影响评估（TIA）保障跨境数据传输合规。详情请参阅 [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md)。
+平台当前仅运营中国大陆区域（入口 `tm.zhengquai.com`），欧盟/EEA 用户的个人数据存储在中国大陆。平台通过标准合同条款（SCCs）及传输影响评估（TIA）保障跨境数据传输合规。详情请参阅 [GDPR_COMPLIANCE.md](GDPR_COMPLIANCE.md)。
