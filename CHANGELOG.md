@@ -19,6 +19,9 @@
 
 ### Added
 - CLI 测试套件 `scripts/cli.test.mjs`（`npm test`，node:test，零第三方依赖，21 个用例）
+- **开源**：源代码以 Apache-2.0 发布（`LICENSE` + `NOTICE`）。商标不随许可证转移（Apache-2.0 §6），调用平台 API 及其返回数据仍受 `API_TERMS_OF_USE.md` 约束
+- `SECURITY.md` 补漏洞报告入口（私下邮件、3 个工作日回复、30 天修复窗口）
+- README 补前置条件（需 tm.zhengquai.com 账号与 API Key）与许可证边界说明
 
 ## [1.1.0] - 2026-07-14
 ### Changed

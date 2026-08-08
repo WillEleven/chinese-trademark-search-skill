@@ -14,6 +14,23 @@ A public Skill for OpenClaw / ClawHub that connects to a proprietary trademark S
 >
 > **法律声明：** 商标查询结果仅供参考，不构成法律建议。数据可能滞后 CNIPA 1-7 天。详情请参阅 [LEGAL_DISCLAIMER.md](LEGAL_DISCLAIMER.md)。
 
+## 前置条件 / Prerequisites
+
+**本 Skill 需要一个 https://tm.zhengquai.com 平台账号才能运行。** 它本身不含商标数据，
+所有查询都转发给托管平台 API，由平台完成鉴权、扣点与上游数据访问。跑起来需要：
+
+1. Node.js ≥ 18（仅用内置模块，无第三方依赖）
+2. 在 https://tm.zhengquai.com/register 注册并创建组织
+3. 在设置页生成 API Key（`tmu_` 前缀），配置为 `CHINA_TM_USER_TOKEN`
+4. 新注册组织赠送 100 点体验点（90 天有效），足够完整体验查询 / 详情 / 导出
+
+没有 API Key 时，除 `help` 外的所有命令都会返回 `ENV_MISSING`。
+
+**This skill requires an account on https://tm.zhengquai.com.** It ships no trademark
+data of its own — every command is forwarded to the hosted platform API, which handles
+authentication, metering, and upstream data access. Without an API Key every command
+except `help` returns `ENV_MISSING`.
+
 ## 适用场景
 
 - 查询企业或个人名下商标（每次查询返回前 50 条结果，暂不支持翻页）
@@ -174,6 +191,23 @@ CLI 统一输出 JSON 到标准输出，便于 OpenClaw 解析。
 ```
 
 ---
+
+## License / 许可证
+
+本仓库的**源代码**以 [Apache License 2.0](LICENSE) 开源。三条边界请注意：
+
+| 对象 | 适用条款 |
+|---|---|
+| 本仓库源代码（CLI、测试、文档） | Apache-2.0：可自由使用、修改、再分发，含明示专利授权 |
+| 「争取」/「争取AI」/「争取商标监控」/ ZhengQu 等商号与商标 | **不在授权范围**（Apache-2.0 §6）。fork 后不得以暗示官方出品的方式命名，详见 [NOTICE](NOTICE) |
+| 调用 `tm.zhengquai.com` 平台 API 及其返回的数据 | 另受 [API_TERMS_OF_USE.md](API_TERMS_OF_USE.md)，其中 API 数据与查询结果不得商业转售、再许可或再分发 |
+
+一句话：**代码随便拿，名字和数据不随代码走。**
+
+The source code in this repository is licensed under the [Apache License 2.0](LICENSE).
+The license does **not** grant rights to the ZhengQu trade names, trademarks, or logos
+(Apache-2.0 §6, see [NOTICE](NOTICE)), and use of the hosted platform API — including
+the data it returns — is separately governed by [API_TERMS_OF_USE.md](API_TERMS_OF_USE.md).
 
 ## Legal and Compliance / 法律与合规
 

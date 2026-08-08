@@ -1,5 +1,28 @@
 # Security Notice
 
+## 报告安全漏洞 / Reporting a Vulnerability
+
+**请不要通过公开 issue 报告安全漏洞。** 公开 issue 会让问题在修复前暴露给所有人。
+
+- 邮箱：**lengqifeng11@gmail.com**，标题请以 `[SECURITY]` 开头
+- 请附上：受影响的版本或 commit、复现步骤、影响面评估；如涉及计费或越权，请说明可复现的最小账号条件
+- 响应时限：**3 个工作日内**首次回复，**30 天内**给出修复或缓解方案
+- 请给我们合理的修复窗口后再公开披露；修复发布时会在 [CHANGELOG.md](CHANGELOG.md) 致谢报告者（如你不希望署名请说明）
+
+请勿在报告中附上真实的 `tmu_` API Key。如果你怀疑自己的 Key 已泄漏，
+请直接到 https://tm.zhengquai.com/settings/api-keys 吊销并重新生成，无需等待回复。
+
+**Do not report security issues through public issues.** Email
+**lengqifeng11@gmail.com** with a `[SECURITY]` subject prefix. We aim to acknowledge
+within 3 business days and to ship a fix or mitigation within 30 days. Please allow a
+reasonable disclosure window. Never include a live `tmu_` API Key in a report — revoke
+it yourself at https://tm.zhengquai.com/settings/api-keys instead.
+
+### 影响范围 / Scope
+
+本文件覆盖的是**本仓库的 Skill 代码**（参数处理、token 处理、错误输出等）。
+托管平台 `tm.zhengquai.com` 自身的漏洞同样发到上述邮箱，请在标题中注明 `platform`。
+
 ## 公开 Skill 说明
 
 这是一个公开 Skill，适合发布到 ClawHub、代码仓库或公开分发渠道。

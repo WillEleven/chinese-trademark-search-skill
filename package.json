@@ -17,8 +17,8 @@
   },
   "keywords": ["trademark", "china", "search", "api", "openclaw", "cnipa"],
   "author": "ZhengQu AI IP",
-  "license": "SEE LICENSE IN API_TERMS_OF_USE.md",
-  "files": ["scripts/", "agents/", "*.md"],
+  "license": "Apache-2.0",
+  "files": ["scripts/", "agents/", "*.md", "LICENSE", "NOTICE"],
   "scripts": {
     "lint": "node --check scripts/cli.mjs",
     "test": "node --test scripts/cli.test.mjs",
