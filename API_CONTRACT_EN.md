@@ -38,6 +38,8 @@ X-OC-Request-Id: req_a1B2c3D4e5F6
 - Failed detail lookups (upstream errors) are automatically refunded; the API returns 502 `UPSTREAM_ERROR`
 - Failed export job creation is automatically refunded
 
+> **A refund releases the idempotency key.** The platform de-duplicates on `X-OC-Request-Id` permanently. If the key survived a refund, a client retrying with the same ID would hit de-duplication and receive the result without being charged (and because the detail key is bound to the tmid, that trademark would be free forever). So on a successful refund the platform renames the corresponding `usage_events.request_id` to release it: **a retry after a refund is charged normally**, while a retry without a refund is still protected from double charging by the original key.
+
 ### Insufficient Points (HTTP 402)
 
 When points are insufficient, the API returns HTTP 402 with this body:
@@ -454,7 +456,7 @@ Authorization: Bearer tmu_demo_user_token
     "将 CHINA_TM_PLATFORM_BASE_URL 配置为 https://tm.zhengquai.com",
     "重试 capabilities 验证绑定状态"
   ],
-  "trialNotice": "新注册组织赠送 10 点体验点（30 天有效）；点数用完可在充值页充值，¥1 = 5 点"
+  "trialNotice": "新注册组织赠送 100 点体验点（90 天有效）；点数用完可在充值页充值，¥1 = 5 点"
 }
 ```
 

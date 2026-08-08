@@ -62,9 +62,11 @@ Export estimated point cost tiers:
 - 51-100 items: 5 points
 - 101+ items: 10 points
 
-Pagination: **not currently supported**. Each search returns only the first page (up to 50 results); passing `--page` greater than 1 returns a `PAGINATION_NOT_SUPPORTED` error and no points are charged. If the user asks for the next page, explain that pagination is not currently supported and suggest refining the search keyword.
+Pagination: **not currently supported**. Each search returns only the first page (up to 50 results); passing `--page` greater than 1 is rejected locally by the CLI (`PAGINATION_NOT_SUPPORTED`) — no request is sent and no points are charged. `--pageSize` is deprecated; the platform always returns 50. If the user asks for the next page, explain that pagination is not currently supported and suggest refining the search keyword.
 
-Billing reliability: failed searches (upstream errors) are automatically refunded; failed detail lookups (upstream errors) are automatically refunded; failed export job creation is automatically refunded. The CLI automatically attaches an idempotency header `X-OC-Request-Id`, so network retries will not cause double charges.
+Trial points: new organizations receive 100 trial points valid for 90 days. The balance returned by `capabilities` is authoritative.
+
+Billing reliability: failed searches (upstream errors) are automatically refunded; failed detail lookups (upstream errors) are automatically refunded; failed export job creation is automatically refunded. The CLI automatically attaches an idempotency header `X-OC-Request-Id`, so network retries will not cause double charges. When the platform refunds a charge it also releases that idempotency key, so retrying after a refund is charged normally — it is not a free retry.
 
 ### 3. Handling Insufficient Points
 
@@ -120,8 +122,8 @@ Modules that may be involved:
 2. Inform estimated point cost based on item count
 3. Execute `export --queryId "<queryId>" --tmids "<comma-separated>"`
 4. Return the export job ID, job status, estimated or actual point charge
-5. To check export status, execute `export-status --jobId "<exportJobId>"`
-6. If status is `processing`, check again later; if `completed`, return the download link
+5. To check export status, execute `export-status --jobId "<exportJobId>"` (a single check — the CLI never polls internally)
+6. If the response carries `pending: true` (status `queued` / `processing`), run the command again later; if `completed`, return the download link
 
 ### Modules / Balance / Capabilities
 

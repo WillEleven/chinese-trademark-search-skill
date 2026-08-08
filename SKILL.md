@@ -62,9 +62,11 @@ node {baseDir}/scripts/cli.mjs modules
 - 51~100 条：5 点
 - 101 条及以上：10 点
 
-翻页说明：**暂不支持翻页**。每次查询固定返回第一页前 50 条；`--page` 大于 1 会返回 `PAGINATION_NOT_SUPPORTED` 错误且不扣点。如用户要求翻页，请说明当前暂不支持，建议细化查询关键词。
+翻页说明：**暂不支持翻页**。每次查询固定返回第一页前 50 条；`--page` 大于 1 由 CLI 本地直接拒绝（`PAGINATION_NOT_SUPPORTED`），不扣点也不产生请求。`--pageSize` 已废弃，平台固定 50。如用户要求翻页，请说明当前暂不支持，建议细化查询关键词。
 
-计费可靠性：查询失败（上游异常）会自动退点；详情上游失败会自动退点；导出任务创建失败会自动退点。CLI 已自动附带幂等请求头 `X-OC-Request-Id`，网络重试不会重复扣点。
+体验点：新注册组织赠送 100 点体验点（90 天有效），具体余额以 `capabilities` 返回为准。
+
+计费可靠性：查询失败（上游异常）会自动退点；详情上游失败会自动退点；导出任务创建失败会自动退点。CLI 已自动附带幂等请求头 `X-OC-Request-Id`，网络重试不会重复扣点；平台在退点时会释放该幂等键，所以退点之后再重试是会重新正常扣点的（不是免费重试）。
 
 ### 3. 点数不足时的处理
 
@@ -120,8 +122,8 @@ node {baseDir}/scripts/cli.mjs modules
 2. 按条数提示预计扣点
 3. 执行 `export --queryId "<queryId>" --tmids "<comma-separated>"`
 4. 返回导出任务号、任务状态、预计或实际扣点
-5. 如需查询导出状态，执行 `export-status --jobId "<exportJobId>"`
-6. 若状态为 `processing`，稍后再次查询；若为 `completed`，返回下载链接
+5. 如需查询导出状态，执行 `export-status --jobId "<exportJobId>"`（每次只查一次，不在 CLI 内轮询）
+6. 若响应带 `pending: true`（状态为 `queued` / `processing`），稍后重新执行本命令；若为 `completed`，返回下载链接
 
 ### 模块 / 余额 / 能力
 

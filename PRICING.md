@@ -120,8 +120,8 @@ Payment methods and options vary by region. Please refer to the platform interfa
 
 ### 体验点
 
-- 新注册组织赠送 **10 点体验点**。
-- 体验点自发放之日起 **30 天内过期**。
+- 新注册组织赠送 **100 点体验点**。
+- 体验点自发放之日起 **90 天内过期**。
 - 实际发放以平台实际返回为准。
 - 过期的体验点无法恢复。
 

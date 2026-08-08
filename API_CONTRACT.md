@@ -38,6 +38,8 @@ X-OC-Request-Id: req_a1B2c3D4e5F6
 - 详情上游失败自动退点，返回 502 `UPSTREAM_ERROR`
 - 导出任务创建失败自动退点
 
+> **退点会释放幂等键**：平台按 `X-OC-Request-Id` 永久去重，若退点后仍保留该键，客户端带同一 ID 重试就会命中去重、拿到结果却不扣点（详情的幂等键与 tmid 绑定，等于该商标永久免费）。因此退点成功后平台会把对应 `usage_events.request_id` 改名释放，**退点之后的重试按正常扣点处理**；未退点的重试仍由原键防重复扣。
+
 ### 点数不足（HTTP 402）
 
 点数不足时返回 HTTP 402，body：
@@ -454,7 +456,7 @@ Authorization: Bearer tmu_demo_user_token
     "将 CHINA_TM_PLATFORM_BASE_URL 配置为 https://tm.zhengquai.com",
     "重试 capabilities 验证绑定状态"
   ],
-  "trialNotice": "新注册组织赠送 10 点体验点（30 天有效）；点数用完可在充值页充值，¥1 = 5 点"
+  "trialNotice": "新注册组织赠送 100 点体验点（90 天有效）；点数用完可在充值页充值，¥1 = 5 点"
 }
 ```
 
