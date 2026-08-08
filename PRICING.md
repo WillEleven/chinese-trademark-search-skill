@@ -54,8 +54,8 @@ Larger recharges receive bonus points. Recharge at **https://tm.zhengquai.com/bi
 
 ### Trial Points
 
-- New organizations receive **10 trial points** upon registration.
-- Trial points **expire 30 days** from the date of issuance.
+- New organizations receive **100 trial points** upon registration.
+- Trial points **expire 90 days** from the date of issuance.
 - Actual issuance is subject to the platform's real-time response.
 - Expired trial points cannot be reinstated.
 

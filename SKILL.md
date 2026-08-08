@@ -2,7 +2,8 @@
 name: chinese-trademark-search-skill
 description: 连接中国商标查询托管平台 API，处理商标查询、详情、导出、点数与模块检查、绑定引导，适用于 OpenClaw / ClawHub 中通过本地 Node CLI 调用公开 Skill。
 homepage: https://tm.zhengquai.com
-metadata: {"skillKey":"chinese-trademark-search-skill","homepage":"https://tm.zhengquai.com","tags":["china","trademark","商标","search","openclaw","clawhub"]}
+license: Apache-2.0
+metadata: {"skillKey":"chinese-trademark-search-skill","homepage":"https://tm.zhengquai.com","license":"Apache-2.0","tags":["china","trademark","商标","search","openclaw","clawhub"]}
 ---
 
 # 中国商标查询 Skill

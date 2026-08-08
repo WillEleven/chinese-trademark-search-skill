@@ -42,7 +42,13 @@ except `help` returns `ENV_MISSING`.
 
 ## 安装到 OpenClaw
 
-可用任一方式安装：
+推荐通过 ClawHub 一键安装：
+
+```bash
+openclaw skills install @willeleven/chinese-trademark-search-skill
+```
+
+也可手动安装：
 
 1. 将整个 `chinese-trademark-search-skill/` 文件夹导入到 OpenClaw 的本地 Skill 目录
 2. 或在 ClawHub 中上传 / 发布该 Skill 文件夹
