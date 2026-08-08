@@ -460,7 +460,7 @@ Authorization: Bearer tmu_demo_user_token
 }
 ```
 
-> The `steps` and `trialNotice` fields are returned by the platform in Chinese. In English: register at `https://tm.zhengquai.com/register`, generate an API Key on the settings page after logging in (`tmu_` prefix, shown only once), set it as `CHINA_TM_USER_TOKEN`, set `CHINA_TM_PLATFORM_BASE_URL` to `https://tm.zhengquai.com`, then retry `capabilities`. New organizations receive 10 trial points (valid for 30 days); top up at the billing page, 1 CNY = 5 points.
+> The `steps` and `trialNotice` fields are returned by the platform in Chinese. In English: register at `https://tm.zhengquai.com/register`, generate an API Key on the settings page after logging in (`tmu_` prefix, shown only once), set it as `CHINA_TM_USER_TOKEN`, set `CHINA_TM_PLATFORM_BASE_URL` to `https://tm.zhengquai.com`, then retry `capabilities`. New organizations receive 100 trial points (valid for 90 days); top up at the billing page, 1 CNY = 5 points.
 
 ---
 
