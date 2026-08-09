@@ -13,10 +13,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/lengqifeng/chinese-trademark-search-skill.git"
+    "url": "https://github.com/WillEleven/chinese-trademark-search-skill.git"
+  },
+  "homepage": "https://tm.zhengquai.com",
+  "bugs": {
+    "url": "https://github.com/WillEleven/chinese-trademark-search-skill/issues"
   },
   "keywords": ["trademark", "china", "search", "api", "openclaw", "cnipa"],
-  "author": "ZhengQu AI IP",
+  "author": "Peak Leng <33780136+WillEleven@users.noreply.github.com> (https://github.com/WillEleven)",
+  "contributors": [
+    "ZhengQu AI IP — 重庆争取科技有限公司 (https://tm.zhengquai.com)"
+  ],
   "license": "Apache-2.0",
   "files": ["scripts/", "agents/", "*.md", "LICENSE", "NOTICE"],
   "scripts": {
